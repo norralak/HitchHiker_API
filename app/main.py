@@ -1,14 +1,11 @@
 from typing import List
 from fastapi import Body, Depends, FastAPI, HTTPException, Response, status
-import psycopg2
-from psycopg2.extras import RealDictCursor
-import time
-from . import model, schemaz, utils
+from . import model
 from .database import engine, get_db
 from sqlalchemy.orm import Session
 from passlib.context import CryptContext
-from .routers import messages, users, auth 
-
+from .routers import messages, users, auth, vote 
+from .config import settings
 # Pass Encryption | We wanna use bcrypt
 
 
@@ -20,20 +17,6 @@ model.Base.metadata.create_all(bind=engine)
 app = FastAPI()
 
 # Router
-
-# This is using psycopg2, using ORM this commit onwards
-
-while True:
-    try:
-        konect = psycopg2.connect(host='localhost', database='phantom', user='postgres', password='2542', cursor_factory=RealDictCursor)
-        cursor = konect.cursor()
-        print("Database Connection Successful")
-        break
-    except Exception as error:
-        print("Database Connection Failed")
-        print("Error: ", error)
-        time.sleep(13)
-
 
 # Decorator passes our function as an object into another defined in function
 @app.get("/phantom/who") # Path/route operation. This one is a GET with the default endpoint
@@ -49,3 +32,4 @@ def welcome():
 app.include_router(messages.router)
 app.include_router(users.router)
 app.include_router(auth.router)
+app.include_router(vote.router)

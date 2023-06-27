@@ -1,25 +1,8 @@
 import datetime
-from typing import Optional
+from typing import List, Optional
 from pydantic import BaseModel, EmailStr
 
 # Creating schema class for our payload
-class YourMessage(BaseModel):
-    name: str = "Anonymous"
-    message: str
-    age: int # Optional field specify the type
-    employed: Optional[bool] = False
-    salary: Optional[int] = 0
-
-class CreateMessage(YourMessage):
-    pass
-
-class MessageResponse(YourMessage):
-    id: int
-    created: datetime.datetime
-    
-    class Config:
-        orm_mode = True
-
 class UserCreate(BaseModel):
     email: EmailStr
     password: str
@@ -27,7 +10,25 @@ class UserCreate(BaseModel):
 class UserResp(BaseModel):
     id: int
     email: EmailStr
+    class Config:
+        orm_mode = True
 
+class YourMessage(BaseModel):
+    name: str = "Anonymous"
+    message: str
+    age: int # Optional field specify the type
+    employed: Optional[bool] = False
+    salary: Optional[int] = 0
+    user_id: int
+    owner: UserResp
+    
+class CreateMessage(YourMessage):
+    pass
+
+class MessageResponse(BaseModel):
+    Message: YourMessage
+    votes: int
+    
     class Config:
         orm_mode = True
 
@@ -40,3 +41,8 @@ class MyToken(BaseModel):
 
 class TokenData(BaseModel):
     id: Optional[str] = None
+
+class Vote(BaseModel):
+    message_id: int
+    upDown: Optional[int] = 13
+

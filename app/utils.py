@@ -9,3 +9,7 @@ def hashIt(password: str) -> str:
 
 def checkPass(password:str, hashed: str):
     return hasher.verify(password, hashed)
+
+def msgVote(response):
+    message, votes = response
+    return {"message": message, "votes":votes}
